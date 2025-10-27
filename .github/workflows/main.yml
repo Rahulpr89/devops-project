@@ -47,7 +47,7 @@ jobs:
       run: |
         aws ecs update-service \
           --cluster devops-cluster \
-          --service my-service \
+          --service my-app-tast-service-8arlq0q5 \
           --force-new-deployment
 
         
