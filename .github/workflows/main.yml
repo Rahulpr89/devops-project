@@ -1,0 +1,43 @@
+name: Deploy Maven Project to ECS (Tomcat)
+ 
+on:
+  push:
+    branches: main
+ 
+permissions:
+  id-token: write
+  contents: read
+ 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+ 
+    - name: Set up JDK
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+ 
+    - name: Build with Maven
+      run: mvn clean package
+ 
+    - name: Configure AWS credentials using OIDC
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::832721971180:role/ecs-java-role
+        aws-region: us-east-1
+ 
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+ 
+    - name: Build, tag, and push Docker image
+      run: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 832721971180.dkr.ecr.us-east-1.amazonaws.com
+        docker build -t my-web-ecr .
+        docker tag my-web-ecr:latest 832721971180.dkr.ecr.us-east-1.amazonaws.com/my-web-ecr:latest
+        docker push 832721971180.dkr.ecr.us-east-1.amazonaws.com/my-web-ecr:latest
