@@ -25,11 +25,11 @@ jobs:
     - name: Build with Maven
       run: mvn clean package
  
-    - name: Configure AWS credentials using OIDC
+    - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        role-to-assume: arn:aws:iam::832721971180:role/ecs-java-role
-        role-session-name: github-actions
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
  
     - name: Login to Amazon ECR
