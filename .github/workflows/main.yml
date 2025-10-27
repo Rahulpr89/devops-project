@@ -41,3 +41,5 @@ jobs:
         docker build -t my-web-ecr .
         docker tag my-web-ecr:latest 832721971180.dkr.ecr.us-east-1.amazonaws.com/my-web-ecr:latest
         docker push 832721971180.dkr.ecr.us-east-1.amazonaws.com/my-web-ecr:latest
+
+        
